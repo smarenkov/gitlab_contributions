@@ -1,0 +1,34 @@
+version: '3'
+
+tasks:
+    db:
+        desc: Create a database
+        cmds:
+            - docker compose up -d database
+            - |
+                until docker-compose exec database pg_isready -U postgres; do
+                  echo "Waiting for PostgreSQL to be ready..."
+                  sleep 2
+                done
+            - docker-compose exec database bash create-db.sh
+
+    drop-db:
+        desc: Create a database
+        cmds:
+            - docker compose down database
+            - rm -rf ./data/postgres
+
+    build:
+        desc: Docker compose build
+        cmds:
+            - docker-compose up --build -d
+
+    up:
+        desc: Docker compose up
+        cmds:
+            - docker compose up -d
+
+    down:
+        desc: Docker compose down
+        cmds:
+            - docker compose down

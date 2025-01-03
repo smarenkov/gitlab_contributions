@@ -4,16 +4,8 @@ import { GitlabService } from './service/gitlab.service';
 import { GitlabApi } from './api/gitlab.api';
 
 @Module({
-  imports: [
-    HttpModule
-  ],
-  exports: [
-    GitlabService,
-    GitlabApi
-  ],
-  providers: [
-    GitlabService,
-    GitlabApi
-  ],
+    imports: [HttpModule],
+    exports: [GitlabService, GitlabApi],
+    providers: [GitlabService, GitlabApi],
 })
-export class GitlabModule { }
+export class GitlabModule {}
