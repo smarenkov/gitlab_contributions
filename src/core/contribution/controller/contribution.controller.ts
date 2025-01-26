@@ -14,14 +14,26 @@ export class ContributionController {
     @Get('/gitlab/commits')
     async getGitlabCommits(@Body() data: GetCommitsRequestDto): Promise<CommitDto[]> {
         this.logger.log(`Getting Gitlab commits for author ${data.author}`);
-        return this.service.getCommits(data);
+        return this.service.getGitlabCommits(data);
     }
 
     @Get('/gitlab/commits/project/:projectId')
     async getGitlabCommitsByProjectId(@Body() data: GetCommitsRequestDto, @Param('projectId') projectId: number): Promise<CommitDto[]> {
         this.logger.log(`Getting Gitlab commits for author ${data.author}`);
-        return this.service.getCommitsByProjectId(data, projectId);
+        return this.service.getGitlabCommitsByProjectId(data, projectId);
     }
+
+    @Get('/github/commits')
+    async getGithubCommits(@Body() data: GetCommitsRequestDto): Promise<CommitDto[]> {
+        this.logger.log(`Getting Github commits for author ${data.author}`);
+        return this.service.getGithubCommits(data);
+    }
+
+    // @Get('/github/commits/project/:projectName')
+    // async getGithubCommitsByProjectId(@Body() data: GetCommitsRequestDto, @Param('projectName') projectName: string): Promise<CommitDto[]> {
+    //     this.logger.log(`Getting Github commits for author ${data.author}`);
+    //     return this.service.getGithubCommitsByProjectName(data, projectName);
+    // }
 
     @Get('/update')
     async updateGitHubContributions(@Body() data: GetCommitsRequestDto): Promise<void> {

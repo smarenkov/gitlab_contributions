@@ -9,12 +9,20 @@ services:
         env_file:
             - .env
         restart: always
+        volumes:
+            - ./:/app
+            - backend_node_modules:/app/node_modules
+        depends_on:
+            database:
+                condition: service_healthy
+        networks:
+            - contributions_network
 
     database:
-        image: postgres:17.2
+        image: postgres:17
         container_name: database
         healthcheck:
-            test: ['CMD-SHELL', 'pg_isready -U sm -d sm -h localhost || exit 1']
+            test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB} -h database || exit 1']
             timeout: 5s
             interval: 10s
             retries: 5
@@ -23,7 +31,22 @@ services:
         ports:
             - '5432:5432'
         environment:
-            - POSTGRES_DB=sm
-            - POSTGRES_USER=sm
-            - POSTGRES_PASSWORD=password
+            - POSTGRES_DB=${POSTGRES_DB}
+            - POSTGRES_USER=${POSTGRES_USER}
+            - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
         restart: always
+        networks:
+            - contributions_network
+
+volumes:
+    backend_node_modules:
+        name: backend_node_modules
+        driver: local
+        driver_opts:
+          type: none
+          o: bind
+          device: ${PWD}/node_modules
+
+networks:
+    contributions_network:
+        driver: bridge
